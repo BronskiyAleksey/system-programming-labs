@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+#define NUM_COUNT_1 50
+#define NUM_COUNT_2 100
+
+pthread_mutex_t mutex; // Инициализация мьютекса
+
+// Функция для записи чисел в файл
+void* write_numbers(void* arg) {
+    int start = *((int*)arg);
+    int end = start + NUM_COUNT_1;
+
+    FILE* file = fopen("shared.txt", "a"); // Открываем файл в режиме добавления
+    if (file == NULL) {
+        perror("Ошибка открытия файла shared.txt");
+        pthread_exit(NULL);
+    }
+
+    for (int i = start; i < end; i++) {
+        pthread_mutex_lock(&mutex); // Блокируем мьютекс
+        fprintf(file, "%d\n", i);
+        pthread_mutex_unlock(&mutex); // Разблокируем мьютекс
+    }
+
+    fclose(file);
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t thread1, thread2;
+    int start1 = 1;
+    int start2 = 51;
+
+    // Инициализация мьютекса
+    if (pthread_mutex_init(&mutex, NULL) != 0) {
+        perror("Ошибка инициализации мьютекса");
+        return 1;
+    }
+
+    // Создаем первый поток для записи чисел от 1 до 50
+    if (pthread_create(&thread1, NULL, write_numbers, &start1) != 0) {
+        perror("Ошибка создания потока 1");
+        return 1;
+    }
+
+    // Создаем второй поток для записи чисел от 51 до 100
+    if (pthread_create(&thread2, NULL, write_numbers, &start2) != 0) {
+        perror("Ошибка создания потока 2");
+        return 1;
+    }
+
+    // Ждем завершения потоков
+    pthread_join(thread1, NULL);
+    pthread_join(thread2, NULL);
+
+    // Уничтожаем мьютекс
+    pthread_mutex_destroy(&mutex);
+
+    return 0;
+}
