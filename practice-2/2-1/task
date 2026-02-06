@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <unistd.h>
+
+#define NUM_COUNT 100
+
+// Функция для записи чисел в файл
+void* write_numbers(void* arg) {
+    FILE* file = fopen("output.txt", "w");
+    if (file == NULL) {
+        perror("Ошибка открытия файла output.txt");
+        pthread_exit(NULL);
+    }
+
+    for (int i = 1; i <= NUM_COUNT; i++) {
+        fprintf(file, "%d\n", i);
+    }
+
+    fclose(file);
+    pthread_exit(NULL);
+}
+
+// Функция для чтения из файла и подсчета строк
+void* count_lines(void* arg) {
+    FILE* file = fopen("input.txt", "r");
+    if (file == NULL) {
+        perror("Ошибка открытия файла input.txt");
+        pthread_exit(NULL);
+    }
+
+    int count = 0;
+    char buffer[256];
+
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        count++;
+    }
+
+    fclose(file);
+    printf("Количество строк в input.txt: %d\n", count);
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t writer_thread, reader_thread;
+
+    // Создаем поток для записи
+    if (pthread_create(&writer_thread, NULL, write_numbers, NULL) != 0) {
+        perror("Ошибка создания потока записи");
+        return 1;
+    }
+
+    // Ждем завершения потока записи
+    pthread_join(writer_thread, NULL);
+
+    // Создаем поток для подсчета строк
+    if (pthread_create(&reader_thread, NULL, count_lines, NULL) != 0) {
+        perror("Ошибка создания потока чтения");
+        return 1;
+    }
+
+    // Ждем завершения потока чтения
+    pthread_join(reader_thread, NULL);
+
+    return 0;
+}
