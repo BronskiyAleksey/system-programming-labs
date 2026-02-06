@@ -1,0 +1,31 @@
+Первый дочерний процесс (PID: 993) выполняет ps aux
+Родительский процесс (PID: 992) ждет завершения дочерних процессов...
+Второй дочерний процесс (PID: 994) выполняет date
+Fri Feb  6 14:18:53 +04 2026
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.3  21584 12884 ?        Ss   13:31   0:02 /sbin/init
+root           2  0.0  0.0   3120  2048 ?        Sl   13:31   0:00 /init
+root           6  0.0  0.0   3120  1792 ?        Sl   13:31   0:00 plan9 --control-socket 7 --log-level 4 --server-fd 8 --pipe-fd 10 --log-truncate
+root          42  0.0  0.3  50360 15488 ?        S<s  13:31   0:00 /usr/lib/systemd/systemd-journald
+root          98  0.0  0.1  25272  6400 ?        Ss   13:31   0:01 /usr/lib/systemd/systemd-udevd
+systemd+     110  0.0  0.3  21460 12672 ?        Ss   13:31   0:00 /usr/lib/systemd/systemd-resolved
+systemd+     111  0.0  0.1  91028  7680 ?        Ssl  13:31   0:00 /usr/lib/systemd/systemd-timesyncd
+root         169  0.0  0.0   4236  2560 ?        Ss   13:31   0:00 /usr/sbin/cron -f -P
+message+     170  0.0  0.1   9584  4992 ?        Ss   13:31   0:00 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+root         177  0.0  0.2  17968  8320 ?        Ss   13:31   0:00 /usr/lib/systemd/systemd-logind
+root         189  0.0  0.3 1755840 12288 ?       Ssl  13:31   0:00 /usr/libexec/wsl-pro-service -vv
+root         192  0.0  0.0   3160  2048 hvc0     Ss+  13:31   0:00 /sbin/agetty -o -p -- \u --noclear --keep-baud - 115200,38400,9600 vt220
+syslog       197  0.0  0.1 222508  5632 ?        Ssl  13:31   0:00 /usr/sbin/rsyslogd -n -iNONE
+root         201  0.0  0.0   3116  1920 tty1     Ss+  13:31   0:00 /sbin/agetty -o -p -- \u --noclear - linux
+root         228  0.0  0.5 107008 22144 ?        Ssl  13:31   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+root         309  0.0  0.0   3124   900 ?        Ss   13:31   0:00 /init
+root         310  0.0  0.0   3140  1032 ?        S    13:31   0:00 /init
+oksana       311  0.0  0.1   6072  5248 pts/0    Ss   13:31   0:00 -bash
+root         312  0.0  0.1   6824  4480 pts/1    Ss   13:31   0:00 /bin/login -f
+oksana       357  0.0  0.2  20312 11264 ?        Ss   13:31   0:00 /usr/lib/systemd/systemd --user
+oksana       358  0.0  0.0  21156  3520 ?        S    13:31   0:00 (sd-pam)
+oksana       380  0.0  0.1   6072  4992 pts/1    S+   13:31   0:00 -bash
+oksana       992  0.0  0.0   2680  1536 pts/0    S+   14:18   0:00 ./task
+oksana       993  100  0.1   8280  4224 pts/0    R+   14:18   0:00 ps aux
+oksana       994  0.0  0.0      0     0 pts/0    Z+   14:18   0:00 [date] <defunct>
+Оба дочерних процесса завершены. Родительский процесс завершает работу.
