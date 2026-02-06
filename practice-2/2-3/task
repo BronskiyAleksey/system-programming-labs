@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <string.h>
+#include <stdatomic.h>
+
+volatile sig_atomic_t alarm_received = 0; // Флаг для обработки сигнала SIGALRM
+
+// Обработчик сигнала SIGALRM
+void handle_alarm(int sig) {
+    // Устанавливаем флаг
+    alarm_received = 1;
+    // Используем write() для безопасного вывода
+    const char *msg = "Alarm received\n";
+    write(STDOUT_FILENO, msg, strlen(msg));
+}
+
+// Обработчик сигнала SIGINT
+void handle_sigint(int sig) {
+    const char *msg = "Program terminated by SIGINT\n";
+    write(STDOUT_FILENO, msg, strlen(msg));
+    exit(0); // Завершаем программу
+}
+
+int main() {
+    // Установка обработчика для SIGALRM
+    struct sigaction sa_alarm;
+    sa_alarm.sa_handler = handle_alarm;
+    sigemptyset(&sa_alarm.sa_mask);
+    sa_alarm.sa_flags = 0;
+
+    if (sigaction(SIGALRM, &sa_alarm, NULL) == -1) {
+        perror("Failed to set SIGALRM handler");
+        exit(EXIT_FAILURE);
+    }
+
+    // Установка обработчика для SIGINT
+    struct sigaction sa_int;
+    sa_int.sa_handler = handle_sigint;
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = 0;
+
+    if (sigaction(SIGINT, &sa_int, NULL) == -1) {
+        perror("Failed to set SIGINT handler");
+        exit(EXIT_FAILURE);
+    }
+
+    // Установка будильника на 10 секунд
+    alarm(10);
+
+    // Программа засыпает на 60 секунд
+    printf("Sleeping for 60 seconds...\n");
+    for (int i = 0; i < 60; i++) {
+        sleep(1);
+        if (alarm_received) {
+            break; // Выход из цикла, если сигнал SIGALRM был получен
+        }
+    }
+
+    return 0;
+}
