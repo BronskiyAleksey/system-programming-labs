@@ -1,0 +1,9 @@
+Запуск executable.sh с правами 755:
+Hello
+Попытка запустить executable.sh с правами 644:
+Hello
+Содержимое через жесткую ссылку:
+cat: hardlink.txt: No such file or directory
+
+Содержимое через символьную ссылку:
+cat: symlink.txt: No such file or directory
