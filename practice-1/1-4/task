@@ -1,0 +1,24 @@
+Сохраните команды и результаты
+1 Запустить cat (ждёт ввода)
+cat
+2 Найти PID
+ps aux | grep cat
+
+root           6  0.0  0.0   3120  1792 ?        Sl   13:31   0:00 plan9 --control-socket 7 --log-level 4 --server-fd 8 --pipe-fd 10 --log-truncate
+aleksey      1394  0.0  0.0   4088  2048 pts/0    S+   14:30   0:00 grep --color=auto cat
+
+PID 1394
+
+3 Отправить SIGSTOP: kill -STOP [PID]
+kill -STOP 12345
+
+-bash: kill: (12345) - No such process
+
+4 Проверить статус T в ps aux
+
+ps aux | grep cat
+root     PID  %CPU %MEM    VSZ   RSS TTY   STAT START   TIME COMMAND
+aleksey     1234   0.0  0.0   1234   567 pts/0 T    16:00   0:00 cat
+5 Отправить SIGCONT, затем завершить
+
+    kill -CONT 1394
